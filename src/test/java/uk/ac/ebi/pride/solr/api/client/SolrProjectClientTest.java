@@ -21,8 +21,6 @@ class SolrProjectClientTest {
 
     @Test
     public void contextLoad() throws IOException {
-        solrProjectClient.deleteProjectById("upsertId");
-        solrProjectClient.deleteProjectById("randomId");
     }
 
 
