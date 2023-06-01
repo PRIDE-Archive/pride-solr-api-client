@@ -70,7 +70,7 @@ class SolrApiRestClient {
             log.info("POST Request payload : " + payload);
             log.error(e.getMessage(), e);
             throw e;
-        } catch (Exception e) {
+        } catch (Exception ex) {
             log.error("Caught exception while sendPostRequest: " + ex.getMessage());
             retryCount++;
             if (retryCount <= 10) {
@@ -110,7 +110,7 @@ class SolrApiRestClient {
         } catch (RestClientException e) {
             log.error(e.getMessage(), e);
             throw e;
-        } catch (Exception e) {
+        } catch (Exception ex) {
             log.error("Caught exception while sendDeleteRequest: " + ex.getMessage());
             retryCount++;
             if (retryCount <= 10) {
@@ -172,7 +172,7 @@ class SolrApiRestClient {
         } catch (RestClientException e) {
             log.error(e.getMessage(), e);
             throw e;
-        } catch (Exception e) {
+        } catch (Exception ex) {
             log.error("Caught exception while makeGetRequest: " + ex.getMessage());
             retryCount++;
             if (retryCount <= 10) {
@@ -208,7 +208,7 @@ class SolrApiRestClient {
         } catch (RestClientException e) {
             log.error(e.getMessage(), e);
             throw e;
-        } catch (Exception e) {
+        } catch (Exception ex) {
             log.error("Caught exception while sendPostRequestWithJwtAuthorization: " + ex.getMessage());
             retryCount++;
             if (retryCount <= 10) {
@@ -247,7 +247,7 @@ class SolrApiRestClient {
             log.info("POST Request payload : " + payload);
             log.error(e.getMessage(), e);
             throw e;
-        } catch (Exception e) {
+        } catch (Exception ex) {
             log.error("Caught exception while sendPostRequestForFindByKeyword: " + ex.getMessage());
             retryCount++;
             if (retryCount <= 10) {
