@@ -48,7 +48,7 @@ class SolrApiRestClient {
 
     }
 
-    public String sendPostRequest(String url, String payload) {
+    public String sendPostRequest(String url, String payload, int retryCount) {
         url = baseUrl + url;
         ResponseEntity<String> response;
         try {
@@ -70,11 +70,20 @@ class SolrApiRestClient {
             log.info("POST Request payload : " + payload);
             log.error(e.getMessage(), e);
             throw e;
+        } catch (Exception e) {
+            log.error("Caught exception while sendPostRequest: " + ex.getMessage());
+            retryCount++;
+            if (retryCount <= 10) {
+                Thread.sleep(10000);
+                return sendPostRequest(url, payload, retryCount);
+            } else {
+                throw ex;
+            }
         }
         return response.getBody();
     }
 
-    public String sendDeleteRequest(String url, MultiValueMap<String, String> queryParams) {
+    public String sendDeleteRequest(String url, MultiValueMap<String, String> queryParams, int retryCount) {
         ResponseEntity<String> response;
         try {
             //  create headers
@@ -101,6 +110,15 @@ class SolrApiRestClient {
         } catch (RestClientException e) {
             log.error(e.getMessage(), e);
             throw e;
+        } catch (Exception e) {
+            log.error("Caught exception while sendDeleteRequest: " + ex.getMessage());
+            retryCount++;
+            if (retryCount <= 10) {
+                Thread.sleep(10000);
+                return sendDeleteRequest(url, queryParams, retryCount);
+            } else {
+                throw ex;
+            }
         }
         return response.getBody();
     }
@@ -133,7 +151,7 @@ class SolrApiRestClient {
      * @param uri constructed URL with URI and query parameters
      * @return
      */
-    private String makeGetRequest(URI uri) {
+    private String makeGetRequest(URI uri, int retryCount) {
         ResponseEntity<String> response;
         try {
             //  create headers
@@ -154,11 +172,20 @@ class SolrApiRestClient {
         } catch (RestClientException e) {
             log.error(e.getMessage(), e);
             throw e;
+        } catch (Exception e) {
+            log.error("Caught exception while makeGetRequest: " + ex.getMessage());
+            retryCount++;
+            if (retryCount <= 10) {
+                Thread.sleep(10000);
+                return  makeGetRequest(uri, retryCount);
+            } else {
+                throw ex;
+            }
         }
         return response.getBody();
     }
 
-    public String sendPostRequestWithJwtAuthorization(String url, String payload, String jwtToken) {
+    public String sendPostRequestWithJwtAuthorization(String url, String payload, String jwtToken, int retryCount) {
         url = baseUrl + url;
         ResponseEntity<String> response;
         try {
@@ -181,12 +208,21 @@ class SolrApiRestClient {
         } catch (RestClientException e) {
             log.error(e.getMessage(), e);
             throw e;
+        } catch (Exception e) {
+            log.error("Caught exception while sendPostRequestWithJwtAuthorization: " + ex.getMessage());
+            retryCount++;
+            if (retryCount <= 10) {
+                Thread.sleep(10000);
+                return sendPostRequestWithJwtAuthorization(url, payload, jwtToken, retryCount);
+            } else {
+                throw ex;
+            }
         }
         return response.getBody();
     }
 
     public String sendPostRequestForFindByKeyword(String url, String payload,
-                                                  MultiValueMap<String, String> queryParams) {
+                                                  MultiValueMap<String, String> queryParams, int retryCount) {
 
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(baseUrl + url);
         if (queryParams != null) {
@@ -211,6 +247,15 @@ class SolrApiRestClient {
             log.info("POST Request payload : " + payload);
             log.error(e.getMessage(), e);
             throw e;
+        } catch (Exception e) {
+            log.error("Caught exception while sendPostRequestForFindByKeyword: " + ex.getMessage());
+            retryCount++;
+            if (retryCount <= 10) {
+                Thread.sleep(10000);
+                return sendPostRequestForFindByKeyword(url, payload, queryParams, retryCount);
+            } else {
+                throw ex;
+            }
         }
         return response.getBody();
     }
