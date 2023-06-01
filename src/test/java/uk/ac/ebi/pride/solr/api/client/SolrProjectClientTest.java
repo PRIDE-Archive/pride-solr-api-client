@@ -25,7 +25,7 @@ class SolrProjectClientTest {
 
 
     //@Test
-    void testAll() throws IOException {
+    void testAll() throws IOException, InterruptedException {
 
         //findAllAccessions
         Assert.assertEquals(9816, solrProjectClient.findAllAccessions().get().size());

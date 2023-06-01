@@ -30,7 +30,7 @@ public class SolrProjectClient {
         this.solrApiRestClient = solrApiRestClient;
     }
 
-    public Optional<PrideSolrProject> findByAccession(String accession) throws IOException {
+    public Optional<PrideSolrProject> findByAccession(String accession) throws IOException, InterruptedException {
         final String url = PROJECT_URL_PATH + "/findByAccession";
         // set query parameters
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
@@ -44,70 +44,70 @@ public class SolrProjectClient {
         return Optional.ofNullable(prideSolrProject);
     }
 
-    public void saveAll(List<PrideSolrProject> projects) throws JsonProcessingException {
+    public void saveAll(List<PrideSolrProject> projects) throws JsonProcessingException, InterruptedException {
         final String url = PROJECT_URL_PATH + "/saveAll";
         String payload = objectMapper.writeValueAsString(projects);
-        solrApiRestClient.sendPostRequest(url, payload);
+        solrApiRestClient.sendPostRequest(url, payload, 0);
     }
 
-    public PrideSolrProject save(PrideSolrProject project) throws JsonProcessingException {
+    public PrideSolrProject save(PrideSolrProject project) throws JsonProcessingException, InterruptedException {
         final String url = PROJECT_URL_PATH + "/save";
         return postObjectWithUrl(project, url);
     }
 
-    public PrideSolrProject update(PrideSolrProject project) throws JsonProcessingException {
+    public PrideSolrProject update(PrideSolrProject project) throws JsonProcessingException, InterruptedException {
         final String url = PROJECT_URL_PATH + "/update";
         return postObjectWithUrl(project, url);
     }
 
-    public PrideSolrProject upsert(PrideSolrProject project) throws JsonProcessingException {
+    public PrideSolrProject upsert(PrideSolrProject project) throws JsonProcessingException, InterruptedException {
         final String url = PROJECT_URL_PATH + "/upsert";
         return postObjectWithUrl(project, url);
     }
 
-    private PrideSolrProject postObjectWithUrl(PrideSolrProject project, String url) throws JsonProcessingException {
+    private PrideSolrProject postObjectWithUrl(PrideSolrProject project, String url) throws JsonProcessingException, InterruptedException {
         String payload = objectMapper.writeValueAsString(project);
-        String response = solrApiRestClient.sendPostRequest(url, payload);
+        String response = solrApiRestClient.sendPostRequest(url, payload, 0);
 
         return objectMapper.readValue(response, PrideSolrProject.class);
     }
 
-    public void deleteProjectById(String id) throws JsonProcessingException {
+    public void deleteProjectById(String id) throws JsonProcessingException, InterruptedException {
         final String url = PROJECT_URL_PATH + "/deleteProjectById";
 
         String payload = objectMapper.writeValueAsString(id);
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("id", id);
-        solrApiRestClient.sendDeleteRequest(url, queryParams);
+        solrApiRestClient.sendDeleteRequest(url, queryParams, 0);
     }
 
-    public void deleteAll() throws JsonProcessingException {
+    public void deleteAll() throws JsonProcessingException, InterruptedException {
         final String url = PROJECT_URL_PATH + "/deleteAll";
-        solrApiRestClient.sendDeleteRequest(url, null);
+        solrApiRestClient.sendDeleteRequest(url, null, 0);
     }
 
-    public Optional<Set<String>> findAllAccessions() throws IOException {
+    public Optional<Set<String>> findAllAccessions() throws IOException, InterruptedException {
         final String url = PROJECT_URL_PATH + "/findAllAccessions";
         return getRequestWithUrl(url);
     }
 
-    public Optional<Set<String>> findAllIds() throws IOException {
+    public Optional<Set<String>> findAllIds() throws IOException, InterruptedException {
         final String url = PROJECT_URL_PATH + "/findAllIds";
         return getRequestWithUrl(url);
     }
 
-    public Optional<Set<String>> findProjectAccessionsWithEmptyFileNames() throws IOException {
+    public Optional<Set<String>> findProjectAccessionsWithEmptyFileNames() throws IOException, InterruptedException {
         final String url = PROJECT_URL_PATH + "/findProjectAccessionsWithEmptyFileNames";
         return getRequestWithUrl(url);
     }
 
-    public Optional<Set<String>> findProjectAccessionsWithEmptyPeptideSequencesOrProteinIdentifications() throws IOException {
+    public Optional<Set<String>> findProjectAccessionsWithEmptyPeptideSequencesOrProteinIdentifications() throws IOException, InterruptedException {
         final String url = PROJECT_URL_PATH + "/findProjectAccessionsWithEmptyPeptideSequencesOrProteinIdentifications";
         return getRequestWithUrl(url);
 
     }
 
-    public Optional<Set<String>> getRequestWithUrl(String url) throws JsonProcessingException {
+    public Optional<Set<String>> getRequestWithUrl(String url) throws JsonProcessingException, InterruptedException {
         String response = solrApiRestClient.sendGetRequestWithRetry(url, null, null);
         if (response == null || response.equalsIgnoreCase("null") || response.trim().isEmpty()) {
             return Optional.empty();

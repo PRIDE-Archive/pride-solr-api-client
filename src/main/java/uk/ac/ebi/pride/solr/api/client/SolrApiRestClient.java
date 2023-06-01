@@ -48,7 +48,7 @@ class SolrApiRestClient {
 
     }
 
-    public String sendPostRequest(String url, String payload, int retryCount) {
+    public String sendPostRequest(String url, String payload, int retryCount) throws InterruptedException {
         url = baseUrl + url;
         ResponseEntity<String> response;
         try {
@@ -83,7 +83,7 @@ class SolrApiRestClient {
         return response.getBody();
     }
 
-    public String sendDeleteRequest(String url, MultiValueMap<String, String> queryParams, int retryCount) {
+    public String sendDeleteRequest(String url, MultiValueMap<String, String> queryParams, int retryCount) throws InterruptedException {
         ResponseEntity<String> response;
         try {
             //  create headers
@@ -133,7 +133,7 @@ class SolrApiRestClient {
      * @param queryParams Query parameters
      * @return JSON object in String format
      */
-    public String sendGetRequestWithRetry(String url, Map<String, String> uriParams, MultiValueMap<String, String> queryParams) {
+    public String sendGetRequestWithRetry(String url, Map<String, String> uriParams, MultiValueMap<String, String> queryParams) throws InterruptedException {
 
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(baseUrl + url);
         if (queryParams != null) {
@@ -141,7 +141,7 @@ class SolrApiRestClient {
         }
         URI completeUrl = (uriParams != null) ? uriBuilder.buildAndExpand(uriParams).toUri() : uriBuilder.build().toUri();
 
-        return makeGetRequest(completeUrl);
+        return makeGetRequest(completeUrl, 0);
     }
 
 
@@ -151,7 +151,7 @@ class SolrApiRestClient {
      * @param uri constructed URL with URI and query parameters
      * @return
      */
-    private String makeGetRequest(URI uri, int retryCount) {
+    private String makeGetRequest(URI uri, int retryCount) throws InterruptedException {
         ResponseEntity<String> response;
         try {
             //  create headers
@@ -185,7 +185,7 @@ class SolrApiRestClient {
         return response.getBody();
     }
 
-    public String sendPostRequestWithJwtAuthorization(String url, String payload, String jwtToken, int retryCount) {
+    public String sendPostRequestWithJwtAuthorization(String url, String payload, String jwtToken, int retryCount) throws InterruptedException {
         url = baseUrl + url;
         ResponseEntity<String> response;
         try {
@@ -222,7 +222,7 @@ class SolrApiRestClient {
     }
 
     public String sendPostRequestForFindByKeyword(String url, String payload,
-                                                  MultiValueMap<String, String> queryParams, int retryCount) {
+                                                  MultiValueMap<String, String> queryParams, int retryCount) throws InterruptedException {
 
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(baseUrl + url);
         if (queryParams != null) {
