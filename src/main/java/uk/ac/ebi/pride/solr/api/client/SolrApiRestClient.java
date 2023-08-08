@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -69,6 +70,11 @@ class SolrApiRestClient {
         } catch (RestClientException e) {
             log.info("POST Request payload : " + payload);
             log.error(e.getMessage(), e);
+            if(e instanceof HttpServerErrorException){
+                HttpServerErrorException httpServerErrorException = ((HttpServerErrorException)e);
+                log.error(httpServerErrorException.getResponseBodyAsString());
+                log.error(httpServerErrorException.getStatusText());
+            }
             throw e;
         } catch (Exception ex) {
             log.error("Caught exception while sendPostRequest: " + ex.getMessage());
