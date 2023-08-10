@@ -7,6 +7,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpServerErrorException;
@@ -40,7 +41,10 @@ class SolrApiRestClient {
      * @param appName     The name of APP that is calling these REST APIs. For Logging & Debug purposes.
      */
     SolrApiRestClient(String baseUrl, String apiKeyName, String apiKeyValue, String appName) {
-        this.restTemplate = new RestTemplate();
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout(10000); // 5 seconds
+        factory.setReadTimeout(60000);
+        this.restTemplate = new RestTemplate(factory);
         this.baseUrl = baseUrl;
         this.apiKeyName = apiKeyName;
         this.apiKeyValue = apiKeyValue;
