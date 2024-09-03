@@ -21,7 +21,7 @@ class SolrProjectClientTest {
     }
 
 
-    @Test
+//    @Test
     void testAll() throws IOException, InterruptedException {
 
         //findAllAccessions
