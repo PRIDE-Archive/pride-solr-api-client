@@ -1,12 +1,7 @@
 package uk.ac.ebi.pride.solr.api.client;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.util.MultiValueMap;
@@ -65,7 +60,7 @@ class SolrApiRestClient {
             log.info("POST Request : " + url);
             response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
 
-            HttpStatus statusCode = response.getStatusCode();
+            HttpStatusCode statusCode = response.getStatusCode();
             if (statusCode != HttpStatus.OK && statusCode != HttpStatus.CREATED && statusCode != HttpStatus.ACCEPTED) {
                 String errorMessage = "[POST] Received invalid response for : " + url + " : " + response;
                 log.error(errorMessage);
@@ -74,8 +69,8 @@ class SolrApiRestClient {
         } catch (RestClientException e) {
             log.info("POST Request payload : " + payload);
             log.error(e.getMessage(), e);
-            if(e instanceof HttpServerErrorException){
-                HttpServerErrorException httpServerErrorException = ((HttpServerErrorException)e);
+            if(e instanceof HttpServerErrorException exception){
+                HttpServerErrorException httpServerErrorException = exception;
                 log.error(httpServerErrorException.getResponseBodyAsString());
                 log.error(httpServerErrorException.getStatusText());
             }
@@ -111,7 +106,7 @@ class SolrApiRestClient {
             log.info("DELETE Request : " + completeUrl);
             response = restTemplate.exchange(completeUrl, HttpMethod.DELETE, requestEntity, String.class);
 
-            HttpStatus statusCode = response.getStatusCode();
+            HttpStatusCode statusCode = response.getStatusCode();
             if (statusCode != HttpStatus.NO_CONTENT) {
                 String errorMessage = "[DELETE] Received invalid response for : " + completeUrl + " : " + response;
                 log.error(errorMessage);
@@ -173,7 +168,7 @@ class SolrApiRestClient {
             log.info("GET Request : " + uri);
             response = restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
 
-            HttpStatus statusCode = response.getStatusCode();
+            HttpStatusCode statusCode = response.getStatusCode();
             if (statusCode != HttpStatus.OK && statusCode != HttpStatus.CREATED && statusCode != HttpStatus.ACCEPTED) {
                 String errorMessage = "[GET] Received invalid response for : " + uri + " : " + response;
                 log.error(errorMessage);
@@ -209,7 +204,7 @@ class SolrApiRestClient {
             log.info("Post Request With Jwt: " + url);
             response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
 
-            HttpStatus statusCode = response.getStatusCode();
+            HttpStatusCode statusCode = response.getStatusCode();
             if (statusCode != HttpStatus.OK && statusCode != HttpStatus.CREATED && statusCode != HttpStatus.ACCEPTED) {
                 String errorMessage = "[POST] Received invalid response for : " + url + " : " + response;
                 log.error(errorMessage);
@@ -247,7 +242,7 @@ class SolrApiRestClient {
                     createHeaders());
             response = restTemplate.exchange(completeUrl, HttpMethod.POST, requestEntity, String.class);
 
-            HttpStatus statusCode = response.getStatusCode();
+            HttpStatusCode statusCode = response.getStatusCode();
             if (statusCode != HttpStatus.OK && statusCode != HttpStatus.CREATED && statusCode != HttpStatus.ACCEPTED) {
                 String errorMessage = "[POST] Received invalid response for : " + url + " : " + response;
                 log.error(errorMessage);
